@@ -1,0 +1,20 @@
+
+# Entorno virtual
+.venv/
+
+# Variables de entorno
+.env
+
+# Caché de Python
+__pycache__/
+*.py[cod]
+
+# Archivos del IDE
+.idea/
+
+# Vectorstore generado
+vectorstore/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
