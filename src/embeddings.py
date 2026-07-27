@@ -1,9 +1,14 @@
-from langchain_community.embeddings import HuggingFaceEmbeddings
+import os
+
+# Evita warnings de paralelismo de tokenizers al usar Gradio.
+os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
+
+from langchain_huggingface import HuggingFaceEmbeddings
 
 
-# Crea el modelo de embeddings local
 def build_embeddings():
-    embeddings = HuggingFaceEmbeddings(
+    # Crea embeddings locales con un modelo liviano y estable.
+    return HuggingFaceEmbeddings(
         model_name="sentence-transformers/all-MiniLM-L6-v2",
+        encode_kwargs={"normalize_embeddings": True},
     )
-    return embeddings

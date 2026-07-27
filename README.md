@@ -1,37 +1,72 @@
-# BimBamBuy Agent
+# README - BimBamBuy Agent
 
-Asistente para responder preguntas sobre políticas de devolución y reembolso de BimBamBuy usando Gemini, LangChain y Gradio.
+## Descripción
 
-## Objetivo
+BimBamBuy Agent es un asistente conversacional construido con Python, LangChain, Gemini y Gradio. Su objetivo es responder preguntas sobre las políticas de devolución y reembolso de la tienda BimBamBuy a partir del contenido de un PDF cargado localmente.
 
-Construir un agente capaz de leer la política de devoluciones y reembolsos de BimBamBuy y responder preguntas en lenguaje natural con base en el PDF provisto.
+El proyecto implementa un flujo RAG (Retrieval-Augmented Generation): primero carga y divide el PDF en fragmentos, luego genera embeddings locales con un modelo de Hugging Face, guarda o reutiliza un índice vectorial con FAISS y finalmente consulta Gemini para redactar la respuesta final usando solo el contexto recuperado.
 
-## Arquitectura
+## Tecnologías usadas
 
-1. Se carga el PDF con la política de BimBamBuy.
-2. Se divide el contenido en fragmentos pequeños.
-3. Se crean embeddings con Gemini.
-4. Se construye o carga el índice FAISS.
-5. Se recuperan los fragmentos más relevantes según la pregunta.
-6. Gemini genera la respuesta usando solo ese contexto.
-7. Gradio muestra la conversación en una interfaz web.
+| Tecnología | Rol en el proyecto |
+|------------|--------------------|
+| Python | Lenguaje principal de implementación |
+| Gradio | Interfaz web para conversar con el asistente |
+| LangChain | Orquestación del flujo RAG y del retriever |
+| Gemini | Modelo LLM para generar la respuesta final |
+| Hugging Face / sentence-transformers | Generación local de embeddings |
+| FAISS | Almacenamiento y búsqueda vectorial local |
+| PyPDF | Lectura del PDF de políticas |
 
-## Tecnologías
+## Estructura del proyecto
 
-- Python
-- LangChain
-- Gemini API
-- Gradio
-- FAISS
-- PyPDF
+```bash
+bimbambuy-agent/
+├── app.py
+├── config.py
+├── requirements.txt
+├── .env
+├── data/
+│   └── PDF_politicas_devoluciones_TiendaBimBamBuy.pdf
+├── vectorstore/
+│   └── faiss_index/
+└── src/
+    ├── chain.py
+    ├── embeddings.py
+    ├── loaders.py
+    ├── prompts.py
+    ├── splitter.py
+    └── vectorstore.py
+```
+
+## Cómo funciona
+
+1. `app.py` carga variables de entorno y valida la clave `GOOGLE_API_KEY`.
+2. El PDF de políticas se carga con `PyPDFLoader` y se divide en fragmentos más pequeños.
+3. Cada fragmento se vectoriza con embeddings locales de Hugging Face.
+4. Los vectores se guardan en FAISS para permitir recuperación semántica rápida.
+5. Cuando el usuario hace una pregunta, el retriever busca los fragmentos más relevantes.
+6. Gemini recibe la pregunta y el contexto recuperado para construir la respuesta final.
+
+## Requisitos previos
+
+- Python 3.11.
+- Una clave válida de Google AI Studio para Gemini.
+- El archivo PDF de políticas ubicado dentro de la carpeta `data/`.
 
 ## Instalación local
 
 ```bash
-python3 -m venv .venv
+python3.11 -m venv .venv
 source .venv/bin/activate
+python -m pip install --upgrade pip
 pip install -r requirements.txt
-cp .env.example .env
+```
+
+Crear un archivo `.env` con este contenido:
+
+```env
+GOOGLE_API_KEY=tu_api_key_aqui
 ```
 
 ## Ejecución
@@ -40,21 +75,35 @@ cp .env.example .env
 python app.py
 ```
 
-## Ejemplos de preguntas
+Al iniciar correctamente, Gradio levanta una interfaz local en `http://127.0.0.1:7860` y puede generar un enlace público temporal para pruebas rápidas.
 
-- ¿Cuánto tiempo tengo para solicitar un retracto?
-- ¿Qué pasa si recibo un producto incorrecto?
-- ¿En cuánto tiempo se procesa un reembolso aprobado?
-- ¿Qué evidencias debo enviar si el producto llegó dañado?
+## Configuración principal
 
-## Ejemplos de respuestas
+El archivo `config.py` define las rutas y parámetros principales del sistema:
 
-- El retracto puede solicitarse dentro de los 10 días corridos posteriores a la recepción.
-- Si el producto llegó incorrecto, la solicitud debe ingresarse dentro de las 48 horas.
-- Un reembolso aprobado se procesa entre 5 y 10 días hábiles.
-- El soporte puede solicitar foto, video, etiqueta de envío o comprobante de recepción según el caso.
+- `PDF_PATH`: ruta del PDF de políticas.
+- `INDEX_DIR`: ubicación del índice FAISS.
+- `MODEL_NAME`: modelo Gemini utilizado.
+- `CHUNK_SIZE`: tamaño de cada fragmento.
+- `CHUNK_OVERLAP`: solapamiento entre fragmentos.
+- `TOP_K`: número de fragmentos recuperados por consulta.
 
-## Evidencia de despliegue
+Estos parámetros controlan directamente la calidad de la recuperación y el comportamiento del bot dentro del flujo RAG.
 
-- Captura de la interfaz en Gradio.
-- Enlace público de la app desplegada en OCI.
+## Embeddings locales
+
+El proyecto usa `sentence-transformers/all-MiniLM-L6-v2` a través de Hugging Face porque ofrece una buena relación entre velocidad, consumo de recursos y calidad de búsqueda semántica para un RAG local. Esto permite evitar el costo y la dependencia de una API externa para generar embeddings, además de mantener el contenido del PDF en un flujo local durante la indexación.
+
+## Comportamiento esperado del bot
+
+El asistente debe responder únicamente con base en el contexto recuperado del PDF. Si la respuesta no aparece en la política, debe indicarlo de forma explícita y no inventar información.
+
+## Posibles mejoras
+
+- Agregar memoria conversacional.
+- Incluir citas o referencias al fragmento del PDF usado en cada respuesta.
+- Crear tests automáticos para validar preguntas frecuentes.
+
+## Entregable del challenge
+
+Este proyecto cumple con el objetivo de construir un agente conversacional que consulta un documento PDF de políticas, recupera contexto con un sistema RAG y responde mediante una interfaz web simple. La arquitectura elegida es apropiada para una primera versión local y deja una base razonable para un despliegue posterior en la nube.
