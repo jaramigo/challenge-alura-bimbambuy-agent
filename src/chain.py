@@ -24,7 +24,7 @@ def build_chain(vectorstore):
 
 # Responde una pregunta usando el contexto recuperado
 def answer_question(llm, retriever, prompt, question):
-    docs = retriever.get_relevant_documents(question)
+    docs = retriever.invoke(question)
     context = "\n\n".join(doc.page_content for doc in docs)
     messages = prompt.format_messages(
         context=context,

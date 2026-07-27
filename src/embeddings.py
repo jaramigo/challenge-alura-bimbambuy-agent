@@ -1,9 +1,9 @@
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
-
-from config import EMBEDDING_MODEL
+from langchain_community.embeddings import HuggingFaceEmbeddings
 
 
-# Crea el modelo de embeddings de Gemini
+# Crea el modelo de embeddings local
 def build_embeddings():
-    embeddings = GoogleGenerativeAIEmbeddings(model=EMBEDDING_MODEL)
+    embeddings = HuggingFaceEmbeddings(
+        model_name="sentence-transformers/all-MiniLM-L6-v2",
+    )
     return embeddings
