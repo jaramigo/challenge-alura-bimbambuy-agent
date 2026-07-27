@@ -8,7 +8,13 @@ Construir un agente capaz de leer la política de devoluciones y reembolsos de B
 
 ## Arquitectura
 
-PDF -> Loader -> Splitter -> Embeddings -> FAISS -> Retriever -> Gemini -> Gradio
+1. Se carga el PDF con la política de BimBamBuy.
+2. Se divide el contenido en fragmentos pequeños.
+3. Se crean embeddings con Gemini.
+4. Se construye o carga el índice FAISS.
+5. Se recuperan los fragmentos más relevantes según la pregunta.
+6. Gemini genera la respuesta usando solo ese contexto.
+7. Gradio muestra la conversación en una interfaz web.
 
 ## Tecnologías
 
