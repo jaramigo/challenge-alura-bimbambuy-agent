@@ -9,3 +9,4 @@ if not GOOGLE_API_KEY:
     raise ValueError(
         "No se encontró GOOGLE_API_KEY en el archivo .env"
     )
+
