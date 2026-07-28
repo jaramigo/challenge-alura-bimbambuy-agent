@@ -141,3 +141,10 @@ if __name__ == "__main__":
 ```
 
 Con este cambio, la aplicación quedó escuchando en todas las interfaces de red de la VM y pudo ser accedida externamente desde el navegador.
+
+Además:
+- se habilitó el puerto `7860` en la red de OCI,
+- se agregó una regla persistente en `iptables` para permitir tráfico entrante al puerto `7860`,
+- y se configuró un servicio `systemd` para que la aplicación inicie automáticamente al arrancar la VM.
+
+De esta forma, la aplicación sigue disponible incluso después de cerrar la sesión SSH o reiniciar la instancia.
