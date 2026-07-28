@@ -111,7 +111,33 @@ Este proyecto cumple con el objetivo de construir un agente conversacional que c
 ## Evidencias del Deploy en OCI
 
 Enlace público a la aplicación desplegada:
-
+http://161.153.197.94:7860
 
 Screenshot:
+![Captura de la app funcionando en OCI](screenshots/evicencia_OCI.png)
 
+#### Ajuste necesario para despliegue en OCI
+
+Originalmente la aplicación estaba configurada para ejecutarse solo en localhost:
+
+```python
+if __name__ == "__main__":
+    iface.launch(
+        server_name="127.0.0.1",
+        server_port=7860,
+        share=True,
+    )
+```
+
+Para hacerla accesible desde la IP pública de la instancia en OCI, fue necesario reemplazar esa configuración por:
+
+```python
+if __name__ == "__main__":
+    iface.launch(
+        server_name="0.0.0.0",
+        server_port=7860,
+        share=False,
+    )
+```
+
+Con este cambio, la aplicación quedó escuchando en todas las interfaces de red de la VM y pudo ser accedida externamente desde el navegador.
