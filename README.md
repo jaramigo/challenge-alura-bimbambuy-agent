@@ -111,10 +111,10 @@ Este proyecto cumple con el objetivo de construir un agente conversacional que c
 ## Evidencias del Deploy en OCI
 
 Enlace público a la aplicación desplegada:
-http://161.153.197.94:7860
+http://146.181.59.30:7860
 
 Screenshot:
-![Captura de la app funcionando en OCI](screenshots/evicencia_OCI.png)
+![Captura de la app funcionando en OCI](screenshots/evicencia_OCI_2.png)
 
 #### Ajuste necesario para despliegue en OCI
 
