@@ -107,3 +107,11 @@ El asistente debe responder únicamente con base en el contexto recuperado del P
 ## Entregable del challenge
 
 Este proyecto cumple con el objetivo de construir un agente conversacional que consulta un documento PDF de políticas, recupera contexto con un sistema RAG y responde mediante una interfaz web simple. La arquitectura elegida es apropiada para una primera versión local y deja una base razonable para un despliegue posterior en la nube.
+
+## Evidencias del Deploy en OCI
+
+Enlace público a la aplicación desplegada:
+
+
+Screenshot:
+
